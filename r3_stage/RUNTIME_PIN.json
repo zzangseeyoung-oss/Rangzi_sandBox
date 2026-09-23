@@ -1,0 +1,23 @@
+{
+ "schema": "F5-Q2A-R3/RUNTIME_PIN/1",
+ "provider": "GitHub Actions, GitHub-hosted (provider-managed, ephemeral) runner",
+ "runner_label": "ubuntu-24.04",
+ "runner_environment_required": "github-hosted",
+ "container_image": "docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb",
+ "image_reference_at_pin_time": "python:3.13.0-slim-bookworm (OCI image index digest resolved from Docker Hub)",
+ "python_version": "3.13.0",
+ "machine": "x86_64",
+ "os_id": "debian",
+ "os_codename": "bookworm",
+ "dependency_install": "python -I -B -X pycache_prefix=<fresh empty dir> -m pip install --no-deps --only-binary=:all: --require-hashes --no-compile --no-cache-dir -r r3_stage/requirements.lock",
+ "direct_numerical_dependencies": {
+  "numpy": "2.4.6",
+  "scipy": "1.17.1"
+ },
+ "actions_pinned_by_commit": {
+  "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1 (v7.0.1)",
+  "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a (v7.0.1)",
+  "actions/download-artifact": "3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c (v8.0.1)"
+ },
+ "interpreter_flags": "-I -B (isolated: no PYTHON* env effect, no user site, no cwd/script-dir on sys.path; no bytecode writes)"
+}

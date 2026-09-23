@@ -1,0 +1,115 @@
+# F5-Q2A-R3 STAGE A - external science stage (this build: modes qual | fixture | authorized-with-MOCK only).
+# Trust boundary: GitHub-hosted ephemeral runner + content-addressed container image; only the git snapshot crosses from the
+# executor side, and it is hash-verified against the MASTER-bound R3_SOURCE_MANIFEST before any repository Python runs.
+# The authorization binds the snapshot COMMIT: in authorized mode Stage A refuses unless GITHUB_SHA == GITHUB_WORKFLOW_SHA ==
+# the bound commit and the workflow ref is this file. Provider-signed build provenance (artifact attestation) is produced for the
+# handoff and primary manifests; MASTER verifies it OUTSIDE the executor (R3_MASTER_VERIFICATION.md).
+# One-shot controls outside the science process: environment "r3-science" (required reviewer = MASTER; checked in-run through the
+# provider approvals record for non-mock authorizations), dedicated concurrency group, provider run records (all pages) checked for
+# prior use of the authorization ID, allowance = 1 inside the MASTER bytes; attempt 1 only (a re-run is never admissible).
+# N1: every Python after the literal-checked bootstrap runs with -I -B -X pycache_prefix=<fresh empty dir> (no bytecode written or
+# read); the interpreter tree is censused against the FROZEN image baseline (r3_stage/IMAGE_BASELINE.json, a MASTER-bound snapshot
+# file) under -S BEFORE the first site-enabled Python (pip) and again after the hash-locked install; any deviation fails closed.
+name: r3-stage-a-science
+run-name: "r3-stageA mode=${{ inputs.mode }} auth=${{ inputs.mode == 'authorized' && inputs.authorization_id || 'none' }} fixture=${{ inputs.fixture || '-' }} inject=${{ inputs.inject || '-' }} nonce=${{ inputs.nonce || '-' }}"
+on:
+  workflow_dispatch:
+    inputs:
+      mode: {description: "qual | fixture | authorized", required: true, type: choice, options: [qual, fixture, authorized]}
+      source_manifest_sha256: {description: "MASTER-bound sha256 of R3_SOURCE_MANIFEST.json", required: true, type: string}
+      fixture: {description: "fixture name (mode fixture)", required: false, type: string, default: ""}
+      inject: {description: "pre-freeze QUAL injection (mode fixture)", required: false, type: string, default: ""}
+      authorization_id: {description: "MASTER authorization ID (mode authorized)", required: false, type: string, default: ""}
+      authorization_sha256: {description: "MASTER authorization sha256 (tool-computed)", required: false, type: string, default: ""}
+      authorization_b64: {description: "exact MASTER authorization bytes, base64", required: false, type: string, default: ""}
+      nonce: {description: "dispatcher nonce (run identification only)", required: false, type: string, default: ""}
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+  attestations: write
+concurrency:
+  group: ${{ inputs.mode == 'authorized' && 'r3-stage-a-authorized' || 'r3-stage-a-qual' }}
+  cancel-in-progress: false
+jobs:
+  stage_a:
+    runs-on: ubuntu-24.04
+    environment: ${{ inputs.mode == 'authorized' && 'r3-science' || 'r3-qual' }}
+    timeout-minutes: 90
+    container:
+      image: docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb
+    outputs:
+      evidence_sha: ${{ steps.stage_a.outputs.evidence_sha }}
+      handoff_sha: ${{ steps.stage_a.outputs.handoff_sha }}
+      primary_sha: ${{ steps.stage_a.outputs.primary_sha }}
+    env:
+      R3_CONTAINER_IMAGE: docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb
+    steps:
+      - name: checkout exact commit (no credentials persisted)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: src, persist-credentials: false}
+      - name: bootstrap source verification + pre-install image census (before any site-enabled or repository Python)
+        shell: bash
+        env: {IN_SRC_SHA: "${{ inputs.source_manifest_sha256 }}"}
+        run: |
+          set -euo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  src/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  src/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          mkdir "$RUNNER_TEMP/r3_nopyc"
+          test -z "$(ls -A "$RUNNER_TEMP/r3_nopyc")"
+          rm -rf src/.git
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/bootstrap_verify.py src "$IN_SRC_SHA"
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/image_census.py --root / --baseline src/r3_stage/IMAGE_BASELINE.json --phase pre
+      - name: install hash-locked dependencies (isolated, no bytecode written or read) + post-install image census
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -I -B -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" -m pip install --no-deps --only-binary=:all: --require-hashes --no-compile --no-cache-dir -r src/r3_stage/requirements.lock
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/image_census.py --root / --baseline src/r3_stage/IMAGE_BASELINE.json --phase post
+      - name: stage A
+        id: stage_a
+        shell: bash
+        env:
+          R3_GITHUB_TOKEN: ${{ github.token }}
+          R3_AUTH_B64: ${{ inputs.authorization_b64 }}
+          IN_SRC_SHA: ${{ inputs.source_manifest_sha256 }}
+          IN_MODE: ${{ inputs.mode }}
+          IN_FIXTURE: ${{ inputs.fixture }}
+          IN_INJECT: ${{ inputs.inject }}
+          IN_AUTH_SHA: ${{ inputs.authorization_sha256 }}
+          IN_AUTH_ID: ${{ inputs.authorization_id }}
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/r3out"
+          ARGS=(--root src --source-sha "$IN_SRC_SHA" --mode "$IN_MODE" --out "$OUT" --external)
+          if [ "$IN_MODE" = "fixture" ]; then ARGS+=(--fixture "$IN_FIXTURE"); fi
+          if [ -n "$IN_INJECT" ]; then ARGS+=(--inject "$IN_INJECT"); fi
+          if [ "$IN_MODE" = "authorized" ]; then
+            printf '%s' "$R3_AUTH_B64" | base64 -d > "$RUNNER_TEMP/auth.bin"
+            ARGS+=(--auth-file "$RUNNER_TEMP/auth.bin" --auth-sha "$IN_AUTH_SHA" --auth-id "$IN_AUTH_ID")
+          fi
+          unset R3_AUTH_B64
+          python -I -B -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/stage_a.py "${ARGS[@]}"
+          cat "$OUT/STAGE_A_STATUS.json" >> "$GITHUB_STEP_SUMMARY"
+      - name: upload EVIDENCE artifact (Stage B input)
+        id: up_ev
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with: {name: "r3-evidence-${{ github.run_id }}", path: "${{ runner.temp }}/r3out/EVIDENCE", if-no-files-found: error, retention-days: 90}
+      - name: upload PRIMARY artifact (adjudication input only; never given to the verifier)
+        id: up_pr
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with: {name: "r3-primary-${{ github.run_id }}", path: "${{ runner.temp }}/r3out/PRIMARY", if-no-files-found: error, retention-days: 90}
+      - name: provider-signed build provenance for the handoff and primary manifests
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: |
+            ${{ runner.temp }}/r3out/EVIDENCE/HANDOFF_MANIFEST.json
+            ${{ runner.temp }}/r3out/PRIMARY/PRIMARY_MANIFEST.json
+      - name: record artifact ids and digests
+        shell: bash
+        env: {EV_ID: "${{ steps.up_ev.outputs.artifact-id }}", EV_DIG: "${{ steps.up_ev.outputs.artifact-digest }}", PR_ID: "${{ steps.up_pr.outputs.artifact-id }}", PR_DIG: "${{ steps.up_pr.outputs.artifact-digest }}"}
+        run: printf 'evidence_artifact %s %s\nprimary_artifact %s %s\n' "$EV_ID" "$EV_DIG" "$PR_ID" "$PR_DIG" >> "$GITHUB_STEP_SUMMARY"
+      - name: upload status
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with: {name: "r3-stage-a-status-${{ github.run_id }}", path: "${{ runner.temp }}/r3out/STAGE_A_STATUS.json", if-no-files-found: warn}

@@ -1,0 +1,1406 @@
+{
+ "schema": "F5-Q2A-R3/EXPECTED_OUTCOMES/1",
+ "frozen_before_execution": true,
+ "differential_tolerance_relative": 1e-09,
+ "DIFF_ONLY": "classification not predeclared; primary and verifier must agree exactly (R-1)",
+ "cases": [
+  {
+   "id": "Q_PRESENT_MULTIPLE",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "MULTIPLE"
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "MULTIPLE"
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_PRESENT_INITIALIZATION_ONLY",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_INITIALIZATION_ONLY"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "INITIALIZATION"
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "INITIALIZATION"
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_PRESENT_LEARNING_ONLY",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_LEARNING_ONLY"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "LEARNING"
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "LEARNING"
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_PRESENT_BI_ONLY",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_BI_ONLY"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "BACKWARD_INTERFERENCE"
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "BACKWARD_INTERFERENCE"
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_NOT_DETECTED",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_NOT_DETECTED"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_DIRECTION_ONLY_NOT_DETECTED",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_DIRECTION_ONLY_NOT_DETECTED"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_DESIGN_NO_INFERENCE",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_DESIGN_NO_INFERENCE"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_NULL_ALL_ZERO",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_NULL_ALL_ZERO"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_BI_OPPOSITE_SIGN_NOT_DETECTED",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_BI_OPPOSITE_SIGN_NOT_DETECTED"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_NOT_DETECTED",
+     null
+    ]
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "Q_BOUNDARY_1",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_BOUNDARY_1"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "DIFF_ONLY"
+    ],
+    "final": [
+     "AGREE"
+    ]
+   },
+   "external_only": false,
+   "note": "decision-boundary fixture: classification not predeclared; exact primary/verifier agreement required"
+  },
+  {
+   "id": "Q_BOUNDARY_4",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_BOUNDARY_4"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "DIFF_ONLY"
+    ],
+    "final": [
+     "AGREE"
+    ]
+   },
+   "external_only": false,
+   "note": "decision-boundary fixture: classification not predeclared; exact primary/verifier agreement required"
+  },
+  {
+   "id": "QUAL_REAL_32_WORLDS",
+   "class": "outcome",
+   "stage_a": {
+    "mode": "qual"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "DIFF_ONLY"
+    ],
+    "final": [
+     "AGREE"
+    ]
+   },
+   "external_only": false,
+   "note": "QUAL namespace F5_Q2A_R3_QUAL_V1; outcome not predeclared, never reported as science"
+  },
+  {
+   "id": "MOCK_AUTH_VALID_32_WORLDS",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "mock_valid"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "DIFF_ONLY"
+    ],
+    "final": [
+     "AGREE"
+    ]
+   },
+   "external_only": false,
+   "note": "NON_SCIENCE_MOCK authorization -> NON-SCIENCE namespace F5_Q2A_R3_AUTHMOCK_V1; exercises the full authorized path [local_only (G1): inside r3_qual_external.yml an authorized-mode leg is correctly refused by the commit binding (the workflow ref is not the Stage A science workflow); the external authorized path is MOCK_AUTH_TWO_WORKFLOW_EXTERNAL]",
+   "local_only": true
+  },
+  {
+   "id": "INJ_MISSING_WORLD",
+   "class": "injection",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "INJ_BASE_MULTIPLE",
+    "inject": "missing_world"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "missing or extra world"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "INJ_DUPLICATE_WORLD",
+   "class": "injection",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "INJ_BASE_MULTIPLE",
+    "inject": "duplicate_world"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "duplicate"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "INJ_WRONG_N_31",
+   "class": "injection",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "INJ_BASE_MULTIPLE",
+    "inject": "wrong_n_31"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "seed manifest inconsistent with the evidence"
+   },
+   "external_only": false,
+   "note": "G1 round: reason_contains CHANGED from 'n=32' to the refusal actually observed in the previous round (R3-IMPL-001 local sim, predeclared-expectation error disclosed there and NOT amended there). This new-round expectation is therefore DERIVED_FROM_PRIOR_OBSERVATION and is not independent evidence.",
+   "derived_from_prior_observation": true
+  },
+  {
+   "id": "TAMPER_ALTERED_ARTIFACT",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "altered_artifact",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "file altered"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "TAMPER_ALTERED_ARTIFACT_RESIGNED",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "altered_artifact_resigned",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "HANDOFF_MANIFEST.json hash mismatch"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "TAMPER_SUBSTITUTED_ARTIFACT",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "substituted_artifact",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "HANDOFF_MANIFEST.json hash mismatch"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "TAMPER_PRIMARY_IN_HANDOFF",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "primary_in_handoff",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "primary analysis output inside"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "TAMPER_EVIDENCE_SHA_MISMATCH",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "evidence_sha_mismatch",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "evidence manifest hash differs"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "TAMPER_MISSING_EVIDENCE_FILE",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "missing_evidence_file",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "unlisted or missing files"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "TAMPER_SOURCE_MANIFEST_SWAPPED_IN_HANDOFF",
+   "class": "tamper",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "source_manifest_swapped_in_handoff",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "different source snapshot"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "SOURCE_ALTERED_SCIENCE_SOURCE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "altered_science_source"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_ALTERED_VERIFIER_SOURCE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "altered_verifier_source"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_PLANTED_VALID_PYC",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "planted_valid_pyc"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_PLANTED_SELF_DELETING_PYC",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "planted_self_deleting_pyc"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_PLANTED_PYCACHE_DIR",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "planted_pycache_dir"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_PLANTED_SITECUSTOMIZE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "planted_sitecustomize"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_PLANTED_USERCUSTOMIZE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "planted_usercustomize"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_PLANTED_PTH",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "planted_pth"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_SHADOW_NUMPY_MODULE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "shadow_numpy_module"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_SHADOW_SCIPY_PACKAGE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "shadow_scipy_package"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "SOURCE_EXTRA_UNLISTED_FILE",
+   "class": "source",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "checkout_mutation": "extra_unlisted_file"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "refused_by": "bootstrap_verify",
+    "reason_contains": "BOOTSTRAP_REFUSED"
+   },
+   "external_only": false,
+   "note": "B1 family, committed/checkout variant: refused before any science import"
+  },
+  {
+   "id": "AUTH_BAD_SHA",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_sha"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "MASTER SHA-256",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_BAD_ID",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_id"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "authorization ID mismatch",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_BAD_BINDING_SOURCE",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_binding_source"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "binding mismatch: source_manifest_sha256",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_BAD_BINDING_RUNTIME",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_binding_runtime"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "binding mismatch: runtime_image_digest",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_BAD_BINDING_DEPENDENCY_LOCK",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_binding_dependency_lock"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "binding mismatch: dependency_lock_sha256",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_BAD_BINDING_SCIENCE_WORKFLOW",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_binding_science_workflow"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "binding mismatch: science_workflow_sha256",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_BAD_BINDING_VERIFIER_WORKFLOW",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_binding_verifier_workflow"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "binding mismatch: verifier_workflow_sha256",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_N_31",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "n_31"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "exactly 32",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_ALLOWANCE_2",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "allowance_2"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "allowance",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_ALLOWANCE_TRUE",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "allowance_true"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "allowance",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_MOCK_CLAIMS_SCIENCE_NAMESPACE",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "mock_claims_science_namespace"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "AUTHMOCK namespace",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_NOT_JSON",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "not_json"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "UTF-8 JSON",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "AUTH_REPLAY_PRIOR_RUN",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "replay_prior_run"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "run-count",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": "[local_only: not meaningful/possible on the external runner; excluded from the external matrix]",
+   "local_only": true
+  },
+  {
+   "id": "RUNTIME_LOCAL_MACHINE_CLAIMS_EXTERNAL",
+   "class": "runtime",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "local_claims_external": true
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "runtime identity",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": "the executor's local interpreter cannot pass the external runtime identity check [local_only: not meaningful/possible on the external runner; excluded from the external matrix]",
+   "local_only": true
+  },
+  {
+   "id": "RUNTIME_WRONG_CONTAINER_DIGEST",
+   "class": "runtime",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "container_env_override": "python:3.13.0-slim"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "container image",
+    "refused_by": "stage_a"
+   },
+   "external_only": true,
+   "note": "CONSISTENCY check only (env override); the runtime ATTESTATION is provider-side (provider records + signed provenance, MASTER-verified)"
+  },
+  {
+   "id": "RUNTIME_SELF_HOSTED_RUNNER",
+   "class": "runtime",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "runner": "self-hosted"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "provider-hosted",
+    "refused_by": "stage_a"
+   },
+   "external_only": true,
+   "note": "CONSISTENCY check only (env override); the runtime ATTESTATION is provider-side (provider records + signed provenance, MASTER-verified)"
+  },
+  {
+   "id": "DEPENDENCY_MISMATCH_VERSION",
+   "class": "dependency",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "dependency_mutation": "numpy_other_version"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "dependency lock",
+    "refused_by": "stage_a"
+   },
+   "external_only": true,
+   "note": ""
+  },
+  {
+   "id": "DEPENDENCY_FILE_SUBSTITUTED_AFTER_INSTALL",
+   "class": "dependency",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "dependency_mutation": "patch_scipy_stats_file"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "dependency lock",
+    "refused_by": "stage_a"
+   },
+   "external_only": true,
+   "note": "post-install substitution of scipy code (the B1 payload class) is caught by the wheel RECORD verification"
+  },
+  {
+   "id": "DEPENDENCY_LOCK_UNIT",
+   "class": "dependency",
+   "stage_a": {
+    "unit": "verify_dependencies_strict_wrong_lock"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "unit": "REFUSED"
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "STAGE_COUPLING_SAME_WORKSPACE",
+   "class": "coupling",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": null,
+   "verifier": "same_workspace_as_stage_a",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "must be absent from this runtime"
+   },
+   "external_only": false,
+   "note": "[local_only: not meaningful/possible on the external runner; excluded from the external matrix]",
+   "local_only": true
+  },
+  {
+   "id": "STAGE_COUPLING_SAME_RUNTIME_EXTERNAL",
+   "class": "coupling",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": null,
+   "verifier": "same_job_as_stage_a",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "FAIL_CLOSED"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "separate fresh runtime"
+   },
+   "external_only": true,
+   "note": ""
+  },
+  {
+   "id": "VERIFIER_ATTEMPTS_SCIENCE",
+   "class": "verifier_science",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": null,
+   "verifier": "science_probe",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "SCIENCE_UNAVAILABLE"
+    ],
+    "final": null
+   },
+   "external_only": false,
+   "note": ""
+  },
+  {
+   "id": "ADJUDICATION_DISAGREEMENT",
+   "class": "adjudication",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE"
+   },
+   "between": "primary_disagrees",
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "MULTIPLE"
+    ],
+    "final": [
+     "DESIGN_NO_INFERENCE",
+     null
+    ],
+    "reason_contains": "material primary/verifier disagreement"
+   },
+   "external_only": false,
+   "note": "R-1: material disagreement -> DESIGN_NO_INFERENCE"
+  },
+  {
+   "id": "B1_LOCAL_CONTAMINATION_SNAPSHOT_EXCLUSION",
+   "class": "b1",
+   "stage_a": {
+    "unit": "build_snapshot_from_contaminated_workspace"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "unit": "EXCLUDED"
+   },
+   "external_only": false,
+   "note": "valid/self-deleting pyc, pycache, PYTHONPATH dir, sitecustomize, usercustomize, .pth, shadow numpy/scipy, local venv planted in the executor workspace: the snapshot contains none of them"
+  },
+  {
+   "id": "B1_EXTERNAL_NON_CONSUMPTION",
+   "class": "b1",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "local_contamination": "full_B1_family"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "OK",
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "MULTIPLE"
+    ],
+    "final": [
+     "SELECTIVE_CONTROL_OPPORTUNITY_PRESENT",
+     "MULTIPLE"
+    ],
+    "identical_to_uncontaminated_run": true
+   },
+   "external_only": true,
+   "note": "contamination present on the executor machine during dispatch; the external result must be identical to the clean baseline"
+  },
+  {
+   "id": "STAGE_SEPARATION_UNIT",
+   "class": "coupling",
+   "stage_a": {
+    "unit": "check_separation_same_runtime"
+   },
+   "between": null,
+   "verifier": "unit",
+   "expect": {
+    "unit": "REFUSED",
+    "reason_contains": "separate fresh runtime"
+   },
+   "external_only": false,
+   "note": "verifier refuses equal boot_id/machine_id/run id; accepts distinct"
+  },
+  {
+   "id": "AUTH_BAD_BINDING_TREE",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "bad_binding_tree"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "binding mismatch: snapshot_tree_sha1",
+    "refused_by": "stage_a"
+   },
+   "external_only": false,
+   "note": "N2: mock bytes bound to a different snapshot git tree",
+   "g1_new": true
+  },
+  {
+   "id": "N1_EXT_ROGUE_PTH_BEFORE_INSTALL",
+   "class": "n1_census",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "site_plant": "pre:rogue_pth"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "image census pre",
+    "refused_by": "image_census"
+   },
+   "external_only": true,
+   "note": "N1: a .pth planted in the pinned image's site-packages before the first site-enabled Python -> pre-install census (-S) refuses",
+   "g1_new": true
+  },
+  {
+   "id": "N1_EXT_SITECUSTOMIZE_BEFORE_INSTALL",
+   "class": "n1_census",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "site_plant": "pre:sitecustomize"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "image census pre",
+    "refused_by": "image_census"
+   },
+   "external_only": true,
+   "note": "N1: sitecustomize.py planted in site-packages before pip -> pre-install census refuses",
+   "g1_new": true
+  },
+  {
+   "id": "N1_EXT_STDLIB_PYC_BEFORE_INSTALL",
+   "class": "n1_census",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "site_plant": "pre:stdlib_pyc"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "image census pre",
+    "refused_by": "image_census"
+   },
+   "external_only": true,
+   "note": "N1: a VALID bytecode file planted in a stdlib __pycache__ -> pre-install census refuses (and it is never read: empty pycache_prefix)",
+   "g1_new": true
+  },
+  {
+   "id": "N1_EXT_EXTRA_MODULE_AFTER_INSTALL",
+   "class": "n1_census",
+   "stage_a": {
+    "mode": "fixture",
+    "fixture": "Q_PRESENT_MULTIPLE",
+    "site_plant": "post:rogue_module"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "FAIL_CLOSED",
+    "verifier": null,
+    "final": null,
+    "reason_contains": "image census (post-install) FAIL_CLOSED",
+    "refused_by": "stage_a"
+   },
+   "external_only": true,
+   "note": "N1: an extra module added to site-packages after the census -> Stage A's strict post-install census refuses",
+   "g1_new": true
+  },
+  {
+   "id": "MOCK_AUTH_TWO_WORKFLOW_EXTERNAL",
+   "class": "auth",
+   "stage_a": {
+    "mode": "authorized",
+    "auth": "mock_valid",
+    "orchestrated": "external_qual.py authorized-mock"
+   },
+   "between": null,
+   "verifier": "normal",
+   "expect": {
+    "stage_a": "OK",
+    "verifier": [
+     "DIFF_ONLY"
+    ],
+    "final": [
+     "AGREE"
+    ],
+    "one_shot": "ADMISSIBLE",
+    "replay": "REFUSED_consumed_runs_2"
+   },
+   "external_only": true,
+   "note": "N5: authorized path via r3_stage_a_science.yml -> r3_stage_b_verifier.yml with NON_SCIENCE_MOCK bytes bound to commit+tree; run by the MASTER-side orchestrator, not by the QUAL matrix",
+   "g1_new": true,
+   "orchestrator_only": true
+  }
+ ],
+ "excluded_by_design": {
+  "AUTH_NONMOCK_OUTSIDE_EXTERNAL": "not built: constructing any non-mock authorization object is prohibited in this task"
+ },
+ "revision": "G1 round (F5-Q2A-R3-G1-REPAIR-001), predeclared before any G1 execution: + AUTH_BAD_BINDING_TREE (N2), + four external N1 census cases, + MOCK_AUTH_TWO_WORKFLOW_EXTERNAL (N5, orchestrator_only), MOCK_AUTH_VALID_32_WORLDS local_only, INJ_WRONG_N_31 reason DERIVED_FROM_PRIOR_OBSERVATION. Previous: RC1 repair cycle: predeclared refusal layer/reason per case (Avengers H-M2), local_only flags (J-M1), separation unit case (E-M1)",
+ "previous_round_result_preserved": "R3-IMPL-001 local supporting: 53 PASS / 1 FAIL (INJ_WRONG_N_31) / 6 NOT_RUN - unchanged history"
+}

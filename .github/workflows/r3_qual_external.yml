@@ -1,0 +1,134 @@
+# F5-Q2A-R3 EXTERNAL QUAL (non-science). Runs the frozen case table r3_qual/EXPECTED_OUTCOMES.json on GitHub-hosted runners:
+# every Stage A leg, every Stage B leg and the coupling leg is a separate job (separate fresh VM + pinned container).
+# QUAL-only conveniences (clearly NOT the science path): Stage B legs take expected hashes from the Stage A status artifact of the
+# same QUAL run and run the verifier with --qual-same-run (refused for science evidence). Every leg bootstraps the PRISTINE checkout
+# (literal-checked bootstrap) BEFORE running the QUAL harness; verifier legs prune to the verifier subset (science roles must be absent).
+# N1: every Python runs with -I -B -X pycache_prefix=<fresh empty dir>; EVERY leg (Stage A and Stage B) runs the same trusted
+# install sequence as the science workflows (frozen-baseline image census -> hash-locked pip -> census) inside the QUAL harness.
+name: r3-qual-external
+run-name: "r3-QUAL source=${{ inputs.source_manifest_sha256 }} nonce=${{ inputs.nonce || '-' }}"
+on:
+  workflow_dispatch:
+    inputs:
+      source_manifest_sha256: {description: "sha256 of R3_SOURCE_MANIFEST.json", required: true, type: string}
+      nonce: {description: "dispatcher nonce (run identification only)", required: false, type: string, default: ""}
+permissions:
+  contents: read
+  actions: read
+env:
+  R3_CONTAINER_IMAGE: docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb
+  IN_SRC_SHA: ${{ inputs.source_manifest_sha256 }}
+  R3_GITHUB_TOKEN: ${{ github.token }}
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    container: {image: "docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb"}
+    outputs: {cases: "${{ steps.p.outputs.cases }}"}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: src, persist-credentials: false}
+      - id: p
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  src/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  src/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          mkdir "$RUNNER_TEMP/r3_nopyc"
+          test -z "$(ls -A "$RUNNER_TEMP/r3_nopyc")"
+          rm -rf src/.git
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/bootstrap_verify.py src "$IN_SRC_SHA"
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" -c "import json;d=json.load(open('src/r3_qual/EXPECTED_OUTCOMES.json'));print('cases='+json.dumps([c['id'] for c in d['cases'] if 'unit' not in c['stage_a'] and not c.get('local_only') and c['verifier']!='same_job_as_stage_a' and not c.get('orchestrator_only')]))" >> "$GITHUB_OUTPUT"
+  stage_a:
+    needs: plan
+    runs-on: ubuntu-24.04
+    strategy: {fail-fast: false, max-parallel: 20, matrix: {case: "${{ fromJSON(needs.plan.outputs.cases) }}"}}
+    container: {image: "docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb"}
+    env: {CASE: "${{ matrix.case }}"}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: src, persist-credentials: false}
+      - name: bootstrap the pristine checkout, then copy the (verified) QUAL tools BEFORE any case mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  src/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  src/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          mkdir "$RUNNER_TEMP/r3_nopyc"
+          test -z "$(ls -A "$RUNNER_TEMP/r3_nopyc")"
+          rm -rf src/.git
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/bootstrap_verify.py src "$IN_SRC_SHA"
+          cp -r src "$RUNNER_TEMP/qualtools"
+      - name: case (mutation / auth variant) + bootstrap + install + stage A
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/r3out_status"
+          R3_PYC_PREFIX="$RUNNER_TEMP/r3_nopyc" python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" "$RUNNER_TEMP/qualtools/r3_qual/external_case.py" run-stage-a "$CASE" src "$RUNNER_TEMP" | tee "$RUNNER_TEMP/r3out_status/CASE_A.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "qa-${{ matrix.case }}", path: "${{ runner.temp }}/r3out", if-no-files-found: warn, retention-days: 30}
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "qa-status-${{ matrix.case }}", path: "${{ runner.temp }}/r3out_status", if-no-files-found: warn, retention-days: 30}
+  stage_b:
+    needs: [plan, stage_a]
+    if: always()
+    runs-on: ubuntu-24.04
+    strategy: {fail-fast: false, max-parallel: 20, matrix: {case: "${{ fromJSON(needs.plan.outputs.cases) }}"}}
+    container: {image: "docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb"}
+    env: {CASE: "${{ matrix.case }}"}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: full, persist-credentials: false}
+      - name: bootstrap the pristine checkout; split QUAL tools and the pruned verifier subset
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  full/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  full/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          rm -rf full/.git
+          mkdir "$RUNNER_TEMP/r3_nopyc"
+          test -z "$(ls -A "$RUNNER_TEMP/r3_nopyc")"
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" full/r3_stage/bootstrap_verify.py full "$IN_SRC_SHA"
+          install -D -m 0644 full/r3_qual/external_case.py qualtools/r3_qual/external_case.py
+          install -D -m 0644 full/r3_qual/EXPECTED_OUTCOMES.json qualtools/r3_qual/EXPECTED_OUTCOMES.json
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" full/r3_qual/external_case.py prune-verifier full src
+          rm -rf full
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        continue-on-error: true
+        with: {name: "qa-${{ matrix.case }}", path: "${{ runner.temp }}/a_out"}
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        continue-on-error: true
+        with: {name: "qa-Q_NULL_ALL_ZERO", path: "${{ runner.temp }}/other_out"}
+      - name: tamper (QUAL only) + bootstrap (science roles must be absent) + install + verify + adjudicate
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/b_status"
+          R3_PYC_PREFIX="$RUNNER_TEMP/r3_nopyc" python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" qualtools/r3_qual/external_case.py run-stage-b "$CASE" src "$RUNNER_TEMP" | tee "$RUNNER_TEMP/b_status/CASE_B.json"
+          rm -rf qualtools
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "qb-${{ matrix.case }}", path: "${{ runner.temp }}/b_status", if-no-files-found: warn, retention-days: 30}
+  coupling_same_job:
+    runs-on: ubuntu-24.04
+    container: {image: "docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb"}
+    env: {CASE: STAGE_COUPLING_SAME_RUNTIME_EXTERNAL}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: src, persist-credentials: false}
+      - name: stage A and a PRUNED verifier in the SAME job (the verifier must refuse on runtime separation)
+        shell: bash
+        run: |
+          set -uo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  src/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  src/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          mkdir "$RUNNER_TEMP/r3_nopyc" || exit 1
+          rm -rf src/.git
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/bootstrap_verify.py src "$IN_SRC_SHA" || exit 1
+          cp -r src "$RUNNER_TEMP/qualtools"
+          mkdir -p "$RUNNER_TEMP/c_status"
+          R3_PYC_PREFIX="$RUNNER_TEMP/r3_nopyc" python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" "$RUNNER_TEMP/qualtools/r3_qual/external_case.py" run-coupled "$CASE" src "$RUNNER_TEMP" | tee "$RUNNER_TEMP/c_status/CASE_C.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "qc-coupling", path: "${{ runner.temp }}/c_status", if-no-files-found: warn, retention-days: 30}

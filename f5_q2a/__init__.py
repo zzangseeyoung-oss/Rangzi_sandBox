@@ -1,0 +1,1 @@
+"""F5-Q2A-R1 EXPERIENCE TRANSFER / INTERFERENCE OPPORTUNITY MAPPING (design + QUAL only; no science, no P-Space)."""

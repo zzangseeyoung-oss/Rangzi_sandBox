@@ -1,0 +1,137 @@
+# F5-Q2A-R3 STAGE B - independent verifier on FRESH GitHub-hosted runners (a different workflow run, different jobs, different VMs).
+# Receives only the Stage A EVIDENCE artifact + the Stage A run id and hashes (dispatched by MASTER after the R-6 evidence receipt).
+# The pinned container has no git, so actions/checkout delivers the full tree; the job therefore PRUNES the checkout to the
+# verifier subset BEFORE any verification, and the bootstrap REQUIRES the science roles to be absent (science code cannot run here).
+# The Stage A run is checked against the PROVIDER's records (path, commit, event, conclusion, hosted runner, artifacts, approvals).
+# Workflow inputs reach shell steps ONLY through environment variables (no expression interpolation inside run scripts).
+# N1: -I -B -X pycache_prefix=<fresh empty dir> on every Python; frozen-baseline image census before (-S) and after the install.
+name: r3-stage-b-verifier
+run-name: "r3-stageB for stageA run ${{ inputs.stage_a_run_id }} nonce=${{ inputs.nonce || '-' }}"
+on:
+  workflow_dispatch:
+    inputs:
+      stage_a_run_id: {description: "Stage A workflow run id", required: true, type: string}
+      source_manifest_sha256: {description: "MASTER-bound sha256 of R3_SOURCE_MANIFEST.json", required: true, type: string}
+      expected_handoff_sha: {description: "Stage A handoff manifest sha256 (MASTER-verified against the signed provenance)", required: true, type: string}
+      expected_evidence_sha: {description: "Stage A evidence manifest sha256 (MASTER-receipted, R-6)", required: true, type: string}
+      expected_primary_sha: {description: "Stage A primary manifest sha256 (MASTER-verified against the signed provenance)", required: true, type: string}
+      nonce: {description: "dispatcher nonce (run identification only)", required: false, type: string, default: ""}
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: r3-stage-b-${{ inputs.stage_a_run_id }}
+  cancel-in-progress: false
+env:
+  R3_CONTAINER_IMAGE: docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb
+  IN_SRC_SHA: ${{ inputs.source_manifest_sha256 }}
+  IN_RUN_A: ${{ inputs.stage_a_run_id }}
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    container:
+      image: docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb
+    outputs:
+      verifier_sha: ${{ steps.verify.outputs.verifier_sha }}
+    env:
+      IN_HANDOFF_SHA: ${{ inputs.expected_handoff_sha }}
+      IN_EVIDENCE_SHA: ${{ inputs.expected_evidence_sha }}
+      R3_GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: checkout exact commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: full, persist-credentials: false}
+      - name: prune to the verifier subset, then bootstrap (science roles MUST be absent)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  full/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  full/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          for f in R3_SOURCE_MANIFEST.json .gitattributes r3_verifier/__init__.py r3_verifier/verify_core.py r3_verifier/verify.py \
+                   r3_verifier/adjudicate.py r3_verifier/provider_check.py r3_stage/__init__.py r3_stage/common.py r3_stage/bootstrap_verify.py \
+                   r3_stage/RUNTIME_PIN.json r3_stage/requirements.lock r3_stage/image_census.py \
+                   r3_stage/IMAGE_BASELINE.json f5_q2a/design.py .github/workflows/r3_stage_a_science.yml \
+                   .github/workflows/r3_stage_b_verifier.yml .github/workflows/r3_qual_external.yml; do
+            install -D -m 0644 "full/$f" "src/$f"
+          done
+          rm -rf full
+          mkdir "$RUNNER_TEMP/r3_nopyc"
+          test -z "$(ls -A "$RUNNER_TEMP/r3_nopyc")"
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/bootstrap_verify.py src "$IN_SRC_SHA" docs must_absent=science_code must_absent=science_stage must_absent=qual_fixture
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/image_census.py --root / --baseline src/r3_stage/IMAGE_BASELINE.json --phase pre
+      - name: install hash-locked dependencies (isolated, no bytecode written or read) + post-install image census
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -I -B -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" -m pip install --no-deps --only-binary=:all: --require-hashes --no-compile --no-cache-dir -r src/r3_stage/requirements.lock
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/image_census.py --root / --baseline src/r3_stage/IMAGE_BASELINE.json --phase post
+      - name: provider records of the Stage A run
+        shell: bash
+        run: python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_verifier/provider_check.py --root src --stage-a-run-id "$IN_RUN_A" --out "$RUNNER_TEMP/PROVIDER_RECORD.json" || true
+      - name: download the Stage A EVIDENCE artifact only
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with: {name: "r3-evidence-${{ inputs.stage_a_run_id }}", run-id: "${{ inputs.stage_a_run_id }}", github-token: "${{ github.token }}", path: "${{ runner.temp }}/evidence"}
+      - name: independent verification
+        id: verify
+        shell: bash
+        run: |
+          set -uo pipefail
+          python -I -B -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_verifier/verify.py --root src --source-sha "$IN_SRC_SHA" --handoff "$RUNNER_TEMP/evidence" \
+            --expected-handoff-sha "$IN_HANDOFF_SHA" --expected-evidence-sha "$IN_EVIDENCE_SHA" --stage-a-run-id "$IN_RUN_A" \
+            --provider-record "$RUNNER_TEMP/PROVIDER_RECORD.json" --out "$RUNNER_TEMP/verifier" --external || true
+          head -c 4000 "$RUNNER_TEMP/verifier/VERIFIER_RESULT.json" >> "$GITHUB_STEP_SUMMARY" || true
+          cp "$RUNNER_TEMP/PROVIDER_RECORD.json" "$RUNNER_TEMP/verifier_provider_record.json" || true
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "r3-verifier-${{ github.run_id }}", path: "${{ runner.temp }}/verifier", if-no-files-found: warn, retention-days: 90}
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "r3-provider-record-${{ github.run_id }}", path: "${{ runner.temp }}/verifier_provider_record.json", if-no-files-found: warn, retention-days: 90}
+  adjudicate:
+    needs: verify
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    container:
+      image: docker.io/library/python@sha256:0de818129b26ed8f46fd772f540c80e277b67a28229531a1ba0fdacfaed19bcb
+    env:
+      IN_PRIMARY_SHA: ${{ inputs.expected_primary_sha }}
+      IN_VERIFIER_SHA: ${{ needs.verify.outputs.verifier_sha || 'MISSING' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {ref: "${{ github.sha }}", path: full, persist-credentials: false}
+      - name: prune + bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "8d9aa5b84923c32a16e1f9e3165c26aff192387bb536ff96edc998d2bb86f4f9  full/r3_stage/bootstrap_verify.py" | sha256sum -c -
+          echo "$IN_SRC_SHA  full/R3_SOURCE_MANIFEST.json" | sha256sum -c -
+          for f in R3_SOURCE_MANIFEST.json .gitattributes r3_verifier/__init__.py r3_verifier/verify_core.py r3_verifier/verify.py \
+                   r3_verifier/adjudicate.py r3_verifier/provider_check.py r3_stage/__init__.py r3_stage/common.py r3_stage/bootstrap_verify.py \
+                   r3_stage/RUNTIME_PIN.json r3_stage/requirements.lock r3_stage/image_census.py \
+                   r3_stage/IMAGE_BASELINE.json f5_q2a/design.py .github/workflows/r3_stage_a_science.yml \
+                   .github/workflows/r3_stage_b_verifier.yml .github/workflows/r3_qual_external.yml; do
+            install -D -m 0644 "full/$f" "src/$f"
+          done
+          rm -rf full
+          mkdir "$RUNNER_TEMP/r3_nopyc"
+          test -z "$(ls -A "$RUNNER_TEMP/r3_nopyc")"
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/bootstrap_verify.py src "$IN_SRC_SHA" docs must_absent=science_code must_absent=science_stage must_absent=qual_fixture
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_stage/image_census.py --root / --baseline src/r3_stage/IMAGE_BASELINE.json --phase pre
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        continue-on-error: true
+        with: {name: "r3-primary-${{ inputs.stage_a_run_id }}", run-id: "${{ inputs.stage_a_run_id }}", github-token: "${{ github.token }}", path: "${{ runner.temp }}/primary"}
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        continue-on-error: true
+        with: {name: "r3-verifier-${{ github.run_id }}", path: "${{ runner.temp }}/verifier"}
+      - name: adjudicate (R-1; missing inputs -> DESIGN_NO_INFERENCE with a written record)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/primary" "$RUNNER_TEMP/verifier"
+          python -I -B -S -X pycache_prefix="$RUNNER_TEMP/r3_nopyc" src/r3_verifier/adjudicate.py --root src --primary "$RUNNER_TEMP/primary" --expected-primary-sha "$IN_PRIMARY_SHA" \
+            --verifier "$RUNNER_TEMP/verifier" --expected-verifier-sha "$IN_VERIFIER_SHA" --out "$RUNNER_TEMP/adjudication"
+          cat "$RUNNER_TEMP/adjudication/ADJUDICATION.json" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with: {name: "r3-adjudication-${{ github.run_id }}", path: "${{ runner.temp }}/adjudication", if-no-files-found: error, retention-days: 90}

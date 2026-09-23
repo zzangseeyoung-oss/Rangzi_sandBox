@@ -1,0 +1,5 @@
+# F5-Q2A-R3 dependency lock (the ONLY dependency source of truth for the external stages; the local venv is never used).
+# Installed with: python -I -B -X pycache_prefix=<fresh empty dir> -m pip install --no-deps --only-binary=:all: --require-hashes --no-compile --no-cache-dir -r requirements.lock
+# Hashes: PyPI JSON API, manylinux x86_64 cp313 wheels (runtime = python:3.13.0-slim-bookworm, linux/amd64).
+numpy==2.4.6 --hash=sha256:a7830bab239b79cda9c08c2da014761cafb48da6150e1da17ac06283f43b6089
+scipy==1.17.1 --hash=sha256:581b2264fc0aa555f3f435a5944da7504ea3a065d7029ad60e7c3d1ae09c5464
